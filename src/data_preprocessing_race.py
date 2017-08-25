@@ -23,8 +23,6 @@ class preprocess_race(dataprep_race):
         self.not_same_len_count = 0
         self.filtered_count_speeds = 0
         self.filtered_count_strokes = 0
-
-
         print "data opened", datetime.now().time()
 
     def read_raw_GPS(self):
@@ -40,7 +38,6 @@ class preprocess_race(dataprep_race):
             # Function prep_raw is in data_preparation_race and parses the file
             self.prep_raw_GPS()
             count += 1
-
             # Save GPS strokes and speeds in csv's
             key_no_extension = os.path.splitext(key)[0]
             print('../data/Racedata/' + key[0:4] + '/Speeds/' + key_no_extension + '- speeds.csv')
@@ -72,8 +69,6 @@ class preprocess_race(dataprep_race):
             self.path = self.dict[key]
             # Function prep_raw is in data_preparation_race and parses the file
             self.prep_raw_results()
-
-
             # Save results in csv's
             self.empty_count += self.empty_pointer
             if not self.empty_pointer:
@@ -101,8 +96,6 @@ class preprocess_race(dataprep_race):
             count += 1
         # Calculates the percentage of files that are not used
         throw_percentage = float(self.throw_count)/float(count)
-        # Calculates the percentage of rows that are not used because of to many incorrect measurements
-        above_percentage = float(self.above_count)/float(self.row_count)
         # Calculates percentage of rows that contain incorrect measurements
         above_row_percentage = float(self.above_count)/float(self.row_count)
         print("[%s: Percentage of files not used]" % throw_percentage)
@@ -134,13 +127,6 @@ class preprocess_race(dataprep_race):
             count += 1
 
         self.df_processed = self.df_processed.reset_index(drop=True)
-        file = open("../results_filtering.txt", "w")
-        file.write('number of changed lines speeds: %s' % self.filtered_count_speeds)
-        file.write('number of changed lines strokes: %s' % self.filtered_count_strokes)
-        file.write('number of lines not used: %s' % self.throw_row_count)
-        file.write('number of lines in total: %s' % self.row_count)
-        file.write('number of empty files: &%s' % self.empty_count)
-        file.close()
         # At this moment there are only speeds files and strokes files. If there are more types this should be extended
         # with an elif statement (elif self.type_indicator == 'strokes')
         catagorizer = cat.catagorization(self.df_processed, type='results')
